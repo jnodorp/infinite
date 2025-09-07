@@ -65,10 +65,10 @@ func ExampleNewReader() {
 	buf := make([]byte, 32)
 
 	r.Read(buf)
-	fmt.Printf(string(buf) + "\n")
+	fmt.Println(string(buf))
 
 	r.Read(buf)
-	fmt.Printf(string(buf) + "\n")
+	fmt.Println(string(buf))
 	// Output: Hello infinity!Hello infinity!He
 	// llo infinity!Hello infinity!Hell
 }
