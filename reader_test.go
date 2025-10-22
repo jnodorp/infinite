@@ -12,7 +12,7 @@ import (
 func TestReadBufferSmallerThanData(t *testing.T) {
 	r := NewReader([]byte(string("0123456789ABCDEF-")))
 
-	// Buffer size must be a multiple of 256 bits (32 bytes).
+	// Buffer size must be a multiple of 128 bits (16 bytes).
 	buf := make([]byte, 32)
 
 	n, err := r.Read(buf)
@@ -34,7 +34,7 @@ func TestReadBufferSmallerThanData(t *testing.T) {
 func TestReadBufferLargerThanData(t *testing.T) {
 	r := NewReader([]byte("foobar"))
 
-	// Buffer size must be a multiple of 256 bits (32 bytes).
+	// Buffer size must be a multiple of 128 bits (16 bytes).
 	buf := make([]byte, 64)
 
 	n, err := r.Read(buf)
@@ -61,16 +61,16 @@ func TestReadBufferLargerThanData(t *testing.T) {
 func ExampleNewReader() {
 	r := NewReader([]byte("Hello infinity!"))
 
-	// Buffer size must be a multiple of 256 bits (32 bytes).
-	buf := make([]byte, 32)
+	// Buffer size must be a multiple of 128 bits (16 bytes).
+	buf := make([]byte, 16)
 
 	r.Read(buf)
 	fmt.Println(string(buf))
 
 	r.Read(buf)
 	fmt.Println(string(buf))
-	// Output: Hello infinity!Hello infinity!He
-	// llo infinity!Hello infinity!Hell
+	// Output: Hello infinity!H
+	// ello infinity!He
 }
 
 // BenchmarkRead heavily depends on whether cgo is enabled!
