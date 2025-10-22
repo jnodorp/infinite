@@ -13,10 +13,10 @@ r := infinite.NewReader([]byte("Hello infinity!"))
 buf := make([]byte, 16)
 
 r.Read(buf)
-fmt.Printf(string(buf) + "\n")
+fmt.Println(string(buf))
 
 r.Read(buf)
-fmt.Printf(string(buf) + "\n")
+fmt.Println(string(buf))
 
 // Output:
 // Hello infinity!H
