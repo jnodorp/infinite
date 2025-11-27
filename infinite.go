@@ -14,6 +14,10 @@ type reader struct {
 
 // NewReader that will always return data. Once all data has been read, it will continue from the start.
 func NewReader(data []byte) io.Reader {
+	if len(data) == 0 {
+		return bytes.NewReader(data)
+	}
+
 	return &reader{
 		Data: bytes.Repeat(data, 16), // Align input for better performance.
 	}

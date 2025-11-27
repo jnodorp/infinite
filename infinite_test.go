@@ -2,12 +2,43 @@ package infinite_test
 
 import (
 	"fmt"
+	"io"
 	"strings"
 	"testing"
 
 	. "github.com/jnodorp/infinite"
 	"github.com/stretchr/testify/assert"
 )
+
+func TestReadEmptyData(t *testing.T) {
+	r := NewReader([]byte{})
+	n, err := r.Read(nil)
+	assert.ErrorIs(t, err, io.EOF)
+	assert.Equal(t, 0, n)
+}
+
+func TestReadNilBuffer(t *testing.T) {
+	r := NewReader([]byte{0x00})
+	n, err := r.Read(nil)
+	assert.NoError(t, err)
+	assert.Equal(t, 0, n)
+}
+
+func TestReadSingleByte(t *testing.T) {
+	r := NewReader([]byte{0x00})
+
+	buf := make([]byte, 1)
+
+	n, err := r.Read(buf)
+	assert.NoError(t, err)
+	assert.Equal(t, 1, n)
+	assert.Equal(t, byte(0x00), buf[0])
+
+	n, err = r.Read(buf)
+	assert.NoError(t, err)
+	assert.Equal(t, 1, n)
+	assert.Equal(t, byte(0x00), buf[0])
+}
 
 func TestReadBufferSmallerThanData(t *testing.T) {
 	r := NewReader([]byte(string("0123456789ABCDEF-")))
