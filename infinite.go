@@ -1,8 +1,9 @@
-//go:build !cgo
-
 package infinite
 
-import "io"
+import (
+	"bytes"
+	"io"
+)
 
 var _ io.Reader = (*reader)(nil)
 
@@ -14,16 +15,19 @@ type reader struct {
 // NewReader that will always return data. Once all data has been read, it will continue from the start.
 func NewReader(data []byte) io.Reader {
 	return &reader{
-		Data: data,
+		Data: bytes.Repeat(data, 16), // Align input for better performance.
 	}
 }
 
 func (r *reader) Read(buf []byte) (int, error) {
-	for i := range buf {
-		buf[i] = r.Data[r.pos]
-
-		r.pos++
-		if r.pos == len(r.Data) {
+	d := r.Data
+	for i := 0; i < len(buf); {
+		// copy from current position to end
+		n := copy(buf[i:], d[r.pos:])
+		i += n
+		r.pos += n
+		if r.pos == len(d) {
+			// wrap to start
 			r.pos = 0
 		}
 	}

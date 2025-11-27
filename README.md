@@ -22,7 +22,3 @@ fmt.Println(string(buf))
 // Hello infinity!H
 // ello infinity!He
 ```
-
-## Limitations
-
-The buffer size must be a multiple of `sizeof(__uint128_t)`!
