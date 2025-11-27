@@ -13,22 +13,22 @@ func TestReadBufferSmallerThanData(t *testing.T) {
 	r := NewReader([]byte(string("0123456789ABCDEF-")))
 
 	// Buffer size must be a multiple of 128 bits (16 bytes).
-	buf := make([]byte, 32)
+	buf := make([]byte, 16)
 
 	n, err := r.Read(buf)
 	assert.NoError(t, err)
 	assert.Equal(t, len(buf), n)
-	assert.Equal(t, "0123456789ABCDEF-0123456789ABCDE", string(buf))
+	assert.Equal(t, "0123456789ABCDEF", string(buf))
 
 	n, err = r.Read(buf)
 	assert.NoError(t, err)
 	assert.Equal(t, len(buf), n)
-	assert.Equal(t, "F-0123456789ABCDEF-0123456789ABC", string(buf))
+	assert.Equal(t, "-0123456789ABCDE", string(buf))
 
 	n, err = r.Read(buf)
 	assert.NoError(t, err)
 	assert.Equal(t, len(buf), n)
-	assert.Equal(t, "DEF-0123456789ABCDEF-0123456789A", string(buf))
+	assert.Equal(t, "F-0123456789ABCD", string(buf))
 }
 
 func TestReadBufferLargerThanData(t *testing.T) {
@@ -116,7 +116,7 @@ func BenchmarkRead_4096(b *testing.B) {
 	// Use a reasonably large buffer, to get useful results. Buffer size must be a multiple of 128 bits (16 bytes).
 	buf := make([]byte, 4096)
 
-	for i := 0; i < b.N; i++ {
+	for b.Loop() {
 		n, err := r.Read(buf)
 		assert.NoError(b, err)
 		b.SetBytes(int64(n))
@@ -166,7 +166,7 @@ func BenchmarkRead_8192(b *testing.B) {
 	// Use a reasonably large buffer, to get useful results. Buffer size must be a multiple of 128 bits (16 bytes).
 	buf := make([]byte, 8192)
 
-	for i := 0; i < b.N; i++ {
+	for b.Loop() {
 		n, err := r.Read(buf)
 		assert.NoError(b, err)
 		b.SetBytes(int64(n))
