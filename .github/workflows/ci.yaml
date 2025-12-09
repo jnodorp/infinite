@@ -23,3 +23,12 @@ jobs:
           yarn add @commitlint/cli
           yarn add @commitlint/config-conventional
           yarn run commitlint --from HEAD~${{ github.event.pull_request.commits }}
+
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-go@v6
+        with:
+          go-version-file: go.mod
+      - run: go test ./...
